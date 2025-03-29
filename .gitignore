@@ -1,0 +1,27 @@
+# Python bytecode and cache files
+_pycache_/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Docker artifacts
+docker/image.tar
+
+# MLflow tracking folder (if using local tracking)
+mlruns/
+
+# VS Code / Visual Studio settings
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# OS generated files
+.DS_Store
+Thumbs.db
