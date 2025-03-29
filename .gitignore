@@ -1,10 +1,12 @@
 # Python bytecode and cache files
-_pycache_/
+__pycache__/
 *.py[cod]
 *$py.class
 
-# Virtual environment
+# Virtual environments
 venv/
+orchestration_env/
+mlflow_env/
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints

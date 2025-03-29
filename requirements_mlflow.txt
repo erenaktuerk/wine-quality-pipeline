@@ -1,0 +1,8 @@
+mlflow==2.1.0
+sqlalchemy==1.4.32
+pytz==2022.1
+importlib-metadata==5.0.0
+# further packages, that might be needed in the ML module, eg
+pandas
+scikit-learn
+numpy
