@@ -1,28 +1,3 @@
-# Wine Quality Pipeline
-
-Author: Eren Aktürk (GitHub: erenaktuerk)
-
-## Overview
-
-The Wine Quality Pipeline project demonstrates an end-to-end automated ML pipeline covering:
-- Data processing using Prefect.
-- Model training and experiment tracking with MLflow.
-- Model evaluation with metrics and plots.
-- Deployment of a prediction API using FastAPI.
-- Containerization using Docker.
-- CI/CD automation via GitHub Actions.
-
-This project serves as a comprehensive demonstration of the ML lifecycle, including continuous integration and deployment.
-
-## Project Structure
-
-wine_quality_pipeline/
-├── ci_cd/
-│   └── github_actions.yml          # GitHub Actions…
-Hier ist die aktualisierte README.md, die alle Anpassungen und Änderungen, die du vorgenommen hast, enthält:
-
-⸻
-
 Wine Quality Pipeline
 
 Author: Eren Aktürk (GitHub: erenaktuerk)
@@ -146,6 +121,4 @@ Additional Information and Resources
 
 License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-⸻
+This project is licensed under the MIT License. See the LICENSE file for details
