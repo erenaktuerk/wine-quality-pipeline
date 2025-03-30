@@ -9,30 +9,56 @@ from prefect_dask import DaskTaskRunner
 
 # Task to load raw data from CSV file
 @task
-def load_data(path: str) -> pd.DataFrame:
-    """Load raw data from CSV file."""
+def load_data(file_path: str) -> pd.DataFrame:
+    """
+    Loads data from a CSV file, ensuring proper column separation, and returns the DataFrame.
+    
+    Args:
+        file_path (str): The path to the CSV file to be loaded.
+    
+    Returns:
+        DataFrame: The processed DataFrame.
+    """
     logger = get_run_logger()
     try:
-        df = pd.read_csv(path, sep=";")
-        logger.info("Data Loaded Successfully!")
+        # Attempt to read the CSV with a semicolon as separator (common for the Wine Quality dataset)
+        df = pd.read_csv(file_path, sep=";")
+        
+        # If only one column is present, the file might be comma-separated
+        if len(df.columns) == 1:
+            header_line = df.columns[0]
+            if "," in header_line:
+                logger.info("Detected comma-separated header. Re-reading CSV with comma as separator.")
+                df = pd.read_csv(file_path, sep=",")
+                
+        logger.info("Data loaded successfully!")
+        return df
     except Exception as e:
         logger.error(f"Error loading data: {e}")
         raise
-    return df
 
 # Task to clean the data (handle missing values, type conversion, etc.)
 @task
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
-    """Clean the data (handle missing values, type conversion, etc.)."""
+    """
+    Cleans the data by handling missing values and performing necessary type conversions.
+    
+    Args:
+        df (DataFrame): The input DataFrame.
+        
+    Returns:
+        DataFrame: The cleaned DataFrame.
+    """
     logger = get_run_logger()
     logger.info("Cleaning data...")
     
-    # Check for missing values
-    if df.isnull().sum().any():
-        logger.info("Handling missing values...")
-        df = df.dropna()  # Drop rows with missing values (adjust as necessary)
+    if df is None:
+        raise ValueError("DataFrame is None. Data loading failed.")
     
-    # Additional data cleaning steps can be added here (e.g., type conversions, outlier removal)
+    # Check for missing values and drop rows if any are found
+    if df.isnull().sum().any():
+        logger.info("Handling missing values by dropping rows.")
+        df = df.dropna().reset_index(drop=True)
     
     logger.info("Data cleaned successfully!")
     return df
@@ -40,15 +66,21 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
 # Task to perform feature engineering on the dataset
 @task
 def feature_engineering(df: pd.DataFrame) -> pd.DataFrame:
-    """Perform feature engineering on the data."""
+    """
+    Performs feature engineering on the data, such as creating new features.
+    
+    Args:
+        df (DataFrame): The cleaned DataFrame.
+        
+    Returns:
+        DataFrame: The DataFrame with additional features.
+    """
     logger = get_run_logger()
     logger.info("Performing feature engineering...")
     
-    # Example: Create a new feature 'acidity_ratio'
+    # Example: Create a new feature 'acidity_ratio' if the required columns are present
     if 'fixed acidity' in df.columns and 'volatile acidity' in df.columns:
         df['acidity_ratio'] = df['fixed acidity'] / (df['volatile acidity'] + 1e-5)
-    
-    # You can add more feature engineering steps as needed
     
     logger.info("Feature engineering complete!")
     return df
@@ -56,7 +88,13 @@ def feature_engineering(df: pd.DataFrame) -> pd.DataFrame:
 # Task to save the processed data to CSV
 @task
 def save_data(df: pd.DataFrame, path: str):
-    """Save processed data to CSV file."""
+    """
+    Saves the processed data to a CSV file.
+    
+    Args:
+        df (DataFrame): The DataFrame to be saved.
+        path (str): The path where the CSV file will be stored.
+    """
     logger = get_run_logger()
     try:
         df.to_csv(path, index=False)
@@ -66,13 +104,15 @@ def save_data(df: pd.DataFrame, path: str):
         raise
 
 # Orchestrating the entire data processing pipeline using Prefect and DaskTaskRunner
-@flow(name="Wine Quality Data Processing Pipeline", task_runner=DaskTaskRunner())  # Use DaskTaskRunner
+@flow(name="Wine Quality Data Processing Pipeline", task_runner=DaskTaskRunner())
 def data_processing_pipeline():
-    """Orchestrates the data processing steps."""
+    """
+    Orchestrates the data processing steps.
+    """
     logger = get_run_logger()
     logger.info("Starting data processing pipeline...")
     
-    # Load the configuration file
+    # Load configuration from YAML file
     config = load_config("configs/config.yaml")
     raw_path = config["data"]["raw_path"]
     processed_path = config["data"]["processed_path"]

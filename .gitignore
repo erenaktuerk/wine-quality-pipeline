@@ -1,5 +1,5 @@
 # Python bytecode and cache files
-__pycache__/
+_pycache_/
 *.py[cod]
 *$py.class
 
@@ -27,3 +27,28 @@ mlruns/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Docker containers, volumes, and logs
+*.log
+*.tar
+docker/volumes/
+docker/containers/
+
+# Database files (e.g., SQLite, if used locally)
+*.db
+*.sqlite
+
+# Environment files
+.env
+.env.*
+
+# Python Tools Cache
+.tox/
+.nox/
+.coverage
+.hypothesis/
+.pytest_cache/
+
+# Test and logs
+test_reports/
+logs/
