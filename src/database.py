@@ -35,6 +35,8 @@ class Database:
             print(f"Successfully connected to the {self.dbname} database at {self.host}:{self.port}")
         except Exception as e:
             print(f"Error connecting to the database: {e}")
+            import traceback
+            traceback.print_exc()  # Detaillierten Fehler anzeigen
             raise
 
     def create_table_if_not_exists(self):

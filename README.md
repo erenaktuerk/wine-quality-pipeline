@@ -31,7 +31,7 @@ wine_quality_pipeline/
 ├── notebooks/                      # Jupyter notebooks for prototyping (optional)
 ├── scripts/                        # Utility scripts (if needed)
 ├── src/
-│   ├── _init_.py                 # Package initializer
+│   ├── _init_.py                 	# Package initializer
 │   ├── data_processing.py          # Data processing pipeline with Prefect
 │   ├── model_training.py           # Model training & MLflow integration
 │   ├── model_evaluation.py         # Model evaluation and plotting

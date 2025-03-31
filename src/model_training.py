@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from src.utils import load_config
 from prefect import flow, task
-from database import Database  # Using the Database class
+from src.database import Database  # Using the Database class
 
 # Function to store model results in the database
 def store_model_results_to_db(model_name: str, train_score: float, test_score: float):
