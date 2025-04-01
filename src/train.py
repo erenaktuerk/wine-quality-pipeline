@@ -7,6 +7,7 @@ from sklearn.ensemble import RandomForestRegressor
 from src.utils import load_config
 from prefect import flow, task
 from src.database import Database  # Using the Database class
+from src.evaluation import evaluate_model  # Import evaluate_model Function from evaluation.py
 
 # Function to store model results in the database
 def store_model_results_to_db(model_name: str, train_score: float, test_score: float):
@@ -58,7 +59,7 @@ def train_model_pipeline():
         data = load_processed_data(data_path)
         
         # Assuming 'quality' is the target variable
-        print(data.columns) #debugging
+        print(data.columns)  # Debugging
         X = data.drop("quality", axis=1)
         y = data["quality"]
 
@@ -83,6 +84,9 @@ def train_model_pipeline():
 
         # Save results to database after training
         store_model_results_to_db("RandomForestModel", train_score, test_score)
+
+        # Evaluate the model and log the results
+        evaluate_model(model, X_test, y_test)  # Evaluieren und in MLflow loggen
 
 if __name__ == "__main__":
     train_model_pipeline()
